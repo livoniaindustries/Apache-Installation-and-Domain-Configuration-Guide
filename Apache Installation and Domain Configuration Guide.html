@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apache Installation and Domain Configuration Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        code {
+            font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', Courier, monospace;
+            background-color: #f6f8fa;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 85%;
+        }
+        pre {
+            background-color: #f6f8fa;
+            border-radius: 3px;
+            padding: 16px;
+            overflow: auto;
+            line-height: 1.45;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            white-space: pre;
+        }
+        .note {
+            background-color: #fff5b1;
+            border-left: 4px solid #f9c513;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 3px;
+        }
+        .warning {
+            background-color: #ffeef0;
+            border-left: 4px solid #d73a49;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 3px;
+        }
+        .info-box {
+            background-color: #e6f3ff;
+            border-left: 4px solid #0366d6;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 3px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+        }
+        th, td {
+            border: 1px solid #dfe2e5;
+            padding: 6px 13px;
+        }
+        th {
+            background-color: #f6f8fa;
+        }
+        .os-tabs {
+            display: flex;
+            margin: 20px 0;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .os-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            font-weight: 600;
+        }
+        .os-tab.active {
+            background-color: #f6f8fa;
+            border-color: #e1e4e8;
+            border-bottom-color: transparent;
+        }
+        .os-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #e1e4e8;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+        }
+        .os-content.active {
+            display: block;
+        }
+        .config-block {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 20px 0;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Apache Installation and Domain Configuration Guide</h1>
+
+    <div class="os-tabs">
+        <div class="os-tab active" onclick="showOS('centos')">CentOS</div>
+        <div class="os-tab" onclick="showOS('ubuntu')">Ubuntu/Debian</div>
+    </div>
+
+    <!-- CentOS Content -->
+    <div id="centos" class="os-content active">
+        <h2>Installing Apache (httpd) on CentOS</h2>
+        
+        <p>The Apache package is already included in the CentOS base repository and can be easily installed using the 'yum' package manager.</p>
+
+        <h3>Installation</h3>
+        <pre><code># Check for updates
+sudo yum update httpd
+
+# Install Apache
+sudo yum install httpd
+
+# Start Apache
+sudo systemctl start httpd
+
+# Check status
+sudo systemctl status httpd</code></pre>
+
+        <h3>Firewall Configuration</h3>
+        <pre><code># Allow Apache through firewall (HTTP and HTTPS)
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --permanent --add-service=https
+
+# Reload firewall
+sudo firewall-cmd --reload</code></pre>
+
+        <h3>Apache Management Commands</h3>
+        <table>
+            <tr>
+                <th>Command</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>sudo systemctl start httpd</code></td>
+                <td>Start Apache server</td>
+            </tr>
+            <tr>
+                <td><code>sudo systemctl stop httpd</code></td>
+                <td>Stop Apache server</td>
+            </tr>
+            <tr>
+                <td><code>sudo systemctl restart httpd</code></td>
+                <td>Restart Apache server</td>
+            </tr>
+            <tr>
+                <td><code>sudo systemctl enable httpd</code></td>
+                <td>Enable Apache to start on boot</td>
+            </tr>
+            <tr>
+                <td><code>sudo systemctl disable httpd</code></td>
+                <td>Disable Apache from starting on boot</td>
+            </tr>
+            <tr>
+                <td><code>sudo systemctl status httpd</code></td>
+                <td>Check Apache status</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Ubuntu/Debian Content -->
+    <div id="ubuntu" class="os-content">
+        <h2>Installing Apache2 on Ubuntu/Debian</h2>
+        
+        <pre><code># Update package index
+sudo apt update
+
+# Install Apache2
+sudo apt install apache2
+
+# Check status
+sudo systemctl status apache2</code></pre>
+
+        <h3>Firewall Configuration (UFW)</h3>
+        <pre><code># Allow Apache through firewall
+sudo ufw allow 'Apache'
+sudo ufw allow 'Apache Full'
+sudo ufw allow 'Apache Secure'  # For HTTPS
+
+# Check firewall status
+sudo ufw status</code></pre>
+    </div>
+
+    <h2>Adding Domains to Apache (VirtualHost Configuration)</h2>
+
+    <div class="info-box">
+        <strong>📌 Important:</strong> Before configuring VirtualHosts, you need to set up DNS on the domain registrar side, otherwise no one will see your site.
+    </div>
+
+    <h3>Where to Find VirtualHost Settings</h3>
+    
+    <table>
+        <tr>
+            <th>OS</th>
+            <th>Configuration Location</th>
+        </tr>
+        <tr>
+            <td><strong>Ubuntu/Debian</strong></td>
+            <td><code>/etc/apache2/sites-available/</code></td>
+        </tr>
+        <tr>
+            <td><strong>CentOS/RHEL</strong></td>
+            <td><code>/etc/httpd/conf/httpd.conf</code> (or <code>/etc/httpd/conf.d/</code> for separate files)</td>
+        </tr>
+        <tr>
+            <td><strong>Other Unix-like</strong></td>
+            <td>VirtualHost settings are often in the main <code>apache2.conf</code> file</td>
+        </tr>
+    </table>
+
+    <h3>VirtualHost Configuration Syntax</h3>
+    
+    <p>Use the <code>&lt;VirtualHost *:80&gt;</code> container to add a new virtual host. You can add as many as you need.</p>
+
+    <h4>Basic VirtualHost Structure</h4>
+    <div class="config-block">
+&lt;VirtualHost *:80&gt;  # Virtual host settings tag, 80 is the port
+    ServerAdmin admin@domain.com      # Administrator's contact email
+    DocumentRoot /var/www/domain.com  # Website directory
+    ServerName domain.com             # Primary domain name
+    ServerAlias www.domain.com        # Alternative names (subdomains)
+    
+    # Error and access logs
+    ErrorLog logs/domain.com-error_log
+    CustomLog logs/domain.com-access_log common
+    
+    # Directory rules
+    &lt;Directory /&gt;
+        Options FollowSymLinks
+        AllowOverride All
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+    </div>
+
+    <h3>Example: Multiple Domains Configuration</h3>
+
+    <h4>Example 1: Two Domains on Ubuntu/Debian</h4>
+    <p>Create configuration files in <code>/etc/apache2/sites-available/</code>:</p>
+
+    <h5>First domain: /etc/apache2/sites-available/domain1.com.conf</h5>
+    <div class="config-block">
+&lt;VirtualHost *:80&gt;
+    ServerAdmin admin@domain1.com
+    DocumentRoot /var/www/domain1.com
+    ServerName domain1.com
+    ServerAlias www.domain1.com
+    
+    ErrorLog ${APACHE_LOG_DIR}/domain1.com-error.log
+    CustomLog ${APACHE_LOG_DIR}/domain1.com-access.log combined
+    
+    &lt;Directory /var/www/domain1.com&gt;
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+    </div>
+
+    <h5>Second domain: /etc/apache2/sites-available/domain2.com.conf</h5>
+    <div class="config-block">
+&lt;VirtualHost *:80&gt;
+    ServerAdmin admin@domain2.com
+    DocumentRoot /var/www/domain2.com
+    ServerName domain2.com
+    ServerAlias www.domain2.com
+    
+    ErrorLog ${APACHE_LOG_DIR}/domain2.com-error.log
+    CustomLog ${APACHE_LOG_DIR}/domain2.com-access.log combined
+    
+    &lt;Directory /var/www/domain2.com&gt;
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+    </div>
+
+    <h5>Enable the sites on Ubuntu/Debian:</h5>
+    <pre><code># Create website directories
+sudo mkdir -p /var/www/domain1.com
+sudo mkdir -p /var/www/domain2.com
+
+# Set proper permissions
+sudo chown -R www-data:www-data /var/www/domain1.com
+sudo chown -R www-data:www-data /var/www/domain2.com
+
+# Enable sites
+sudo a2ensite domain1.com.conf
+sudo a2ensite domain2.com.conf
+
+# Disable default site (optional)
+sudo a2dissite 000-default.conf
+
+# Restart Apache
+sudo systemctl restart apache2</code></pre>
+
+    <h4>Example 2: Multiple Domains on CentOS</h4>
+    <p>Add to <code>/etc/httpd/conf/httpd.conf</code> or create separate files in <code>/etc/httpd/conf.d/</code>:</p>
+
+    <div class="config-block">
+# First domain
+&lt;VirtualHost *:80&gt;
+    ServerAdmin user1@domain1.com
+    DocumentRoot /var/www/domain1.com
+    ServerName domain1.com
+    ServerAlias www.domain1.com
+    
+    ErrorLog logs/domain1.com-error_log
+    CustomLog logs/domain1.com-access_log common
+    
+    &lt;Directory /var/www/domain1.com&gt;
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+# Second domain
+&lt;VirtualHost *:80&gt;
+    ServerAdmin user2@domain2.com
+    DocumentRoot /var/www/domain2.com
+    ServerName domain2.com
+    ServerAlias www.domain2.com
+    
+    ErrorLog logs/domain2.com-error_log
+    CustomLog logs/domain2.com-access_log common
+    
+    &lt;Directory /var/www/domain2.com&gt;
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+    </div>
+
+    <pre><code># Create website directories
+sudo mkdir -p /var/www/domain1.com
+sudo mkdir -p /var/www/domain2.com
+
+# Set proper permissions
+sudo chown -R apache:apache /var/www/domain1.com
+sudo chown -R apache:apache /var/www/domain2.com
+
+# Restart Apache
+sudo systemctl restart httpd</code></pre>
+
+    <h3>VirtualHost Parameters Explained</h3>
+    
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><code>ServerAdmin</code></td>
+            <td>Administrator's email address (shown in error messages)</td>
+            <td><code>admin@domain.com</code></td>
+        </tr>
+        <tr>
+            <td><code>DocumentRoot</code></td>
+            <td>Directory where website files are stored</td>
+            <td><code>/var/www/domain.com</code></td>
+        </tr>
+        <tr>
+            <td><code>ServerName</code></td>
+            <td>Primary domain name</td>
+            <td><code>domain.com</code></td>
+        </tr>
+        <tr>
+            <td><code>ServerAlias</code></td>
+            <td>Alternative domain names (subdomains, www, etc.)</td>
+            <td><code>www.domain.com</code></td>
+        </tr>
+        <tr>
+            <td><code>ErrorLog</code></td>
+            <td>Location of error logs</td>
+            <td><code>logs/domain.com-error.log</code></td>
+        </tr>
+        <tr>
+            <td><code>CustomLog</code></td>
+            <td>Location of access logs</td>
+            <td><code>logs/domain.com-access.log</code></td>
+        </tr>
+        <tr>
+            <td><code>&lt;Directory&gt;</code></td>
+            <td>Directory-specific configuration</td>
+            <td>Options, AllowOverride, etc.</td>
+        </tr>
+    </table>
+
+    <h3>Directory Options Explained</h3>
+    
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>Options FollowSymLinks</code></td>
+            <td>Allows following symbolic links in the directory</td>
+        </tr>
+        <tr>
+            <td><code>AllowOverride All</code></td>
+            <td>Allows .htaccess files to override configuration</td>
+        </tr>
+        <tr>
+            <td><code>Require all granted</code></td>
+            <td>Allows access from all sources (Apache 2.4+)</td>
+        </tr>
+    </table>
+
+    <h3>Testing Your Configuration</h3>
+    
+    <pre><code># Test Apache configuration syntax
+sudo apachectl configtest
+
+# Or on Ubuntu/Debian
+sudo apache2ctl configtest
+
+# Create a test file for each domain
+echo "&lt;h1&gt;Domain 1 Website&lt;/h1&gt;" | sudo tee /var/www/domain1.com/index.html
+echo "&lt;h1&gt;Domain 2 Website&lt;/h1&gt;" | sudo tee /var/www/domain2.com/index.html
+
+# Restart Apache after changes
+sudo systemctl restart apache2  # Ubuntu/Debian
+sudo systemctl restart httpd    # CentOS</code></pre>
+
+    <h3>HTTPS Configuration (SSL)</h3>
+    
+    <p>For HTTPS sites, use port 443 and include SSL certificate information:</p>
+    
+    <div class="config-block">
+&lt;VirtualHost *:443&gt;
+    ServerAdmin admin@domain.com
+    DocumentRoot /var/www/domain.com
+    ServerName domain.com
+    
+    SSLEngine on
+    SSLCertificateFile /path/to/certificate.crt
+    SSLCertificateKeyFile /path/to/private.key
+    SSLCertificateChainFile /path/to/chain.crt
+    
+    ErrorLog ${APACHE_LOG_DIR}/domain.com-ssl-error.log
+    CustomLog ${APACHE_LOG_DIR}/domain.com-ssl-access.log combined
+    
+    &lt;Directory /var/www/domain.com&gt;
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+    </div>
+
+    <h2>Troubleshooting</h2>
+
+    <table>
+        <tr>
+            <th>Issue</th>
+            <th>Solution</th>
+        </tr>
+        <tr>
+            <td>Apache won't start</td>
+            <td>Check syntax: <code>apachectl configtest</code><br>Check ports: <code>sudo netstat -tulpn | grep :80</code></td>
+        </tr>
+        <tr>
+            <td>Wrong site showing</td>
+            <td>Check the order of VirtualHosts - first match is used<br>Use <code>ServerAlias</code> to specify all domain variations</td>
+        </tr>
+        <tr>
+            <td>Permission denied</td>
+            <td>Ensure DocumentRoot is readable by Apache user:<br><code>sudo chown -R www-data:www-data /var/www/domain.com</code> (Ubuntu)<br><code>sudo chown -R apache:apache /var/www/domain.com</code> (CentOS)</td>
+        </tr>
+        <tr>
+            <td>404 Not Found</td>
+            <td>Check if index.html exists in DocumentRoot<br>Check DirectoryIndex settings</td>
+        </tr>
+    </table>
+
+    <h2>Quick Reference: Complete Setup Workflow</h2>
+
+    <ol>
+        <li><strong>Install Apache</strong> (see installation sections above)</li>
+        <li><strong>Configure firewall</strong> to allow HTTP/HTTPS</li>
+        <li><strong>Create website directories</strong> for each domain</li>
+        <li><strong>Create VirtualHost configuration</strong> for each domain</li>
+        <li><strong>Enable sites</strong> (a2ensite on Ubuntu or include files on CentOS)</li>
+        <li><strong>Test configuration</strong> with <code>apachectl configtest</code></li>
+        <li><strong>Restart Apache</strong> to apply changes</li>
+        <li><strong>Configure DNS</strong> at your domain registrar</li>
+        <li><strong>Test domains</strong> in browser</li>
+    </ol>
+
+    <script>
+        function showOS(os) {
+            document.querySelectorAll('.os-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.os-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(os).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
